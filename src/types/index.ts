@@ -33,3 +33,10 @@ export interface FooterItem {
 export type MainNavItem = NavItemWithOptionalChildren;
 
 export type SidebarNavItem = NavItemWithChildren;
+
+export type Game = {
+  id: number;
+  name: string;
+  avatarUrl: string;
+  bundleId: string;
+};

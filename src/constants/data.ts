@@ -30,33 +30,56 @@ export const navItems: NavItem[] = [
     items: [] // No child items
   },
   {
-    title: 'Account',
+    title: 'Analystics',
     url: '#', // Placeholder as there is no direct link for the parent
-    icon: 'billing',
+    icon: 'analystics',
     isActive: true,
-
     items: [
       {
-        title: 'Profile',
-        url: '/dashboard/profile',
-        icon: 'userPen',
-        shortcut: ['m', 'm']
+        title: 'Level',
+        shortcut: ['a', 'l'],
+        url: '/dashboard/analystics/level',
+        icon: 'chevronRight'
       },
       {
-        title: 'Login',
-        shortcut: ['l', 'l'],
-        url: '/',
-        icon: 'login'
+        title: 'In App',
+        shortcut: ['a', 'i'],
+        url: '/dashboard/analystics/inapp',
+        icon: 'chevronRight'
+      },
+      {
+        title: 'Advertisement',
+        shortcut: ['a', 'a'],
+        url: '/dashboard/analystics/advertisement',
+        icon: 'chevronRight'
+      },
+      {
+        title: 'Revenue',
+        shortcut: ['a', 'r'],
+        url: '/dashboard/analystics/Revenue',
+        icon: 'chevronRight'
       }
     ]
   },
   {
-    title: 'Kanban',
-    url: '/dashboard/kanban',
-    icon: 'kanban',
-    shortcut: ['k', 'k'],
-    isActive: false,
-    items: [] // No child items
+    title: 'Report',
+    url: '#', // Placeholder as there is no direct link for the parent
+    icon: 'report',
+    isActive: true,
+    items: [
+      {
+        title: 'Overview',
+        shortcut: ['r', 'o'],
+        url: '/dashboard/report/overview',
+        icon: 'chevronRight'
+      },
+      {
+        title: 'Detail',
+        shortcut: ['r', 'd'],
+        url: '/dashboard/report/detail',
+        icon: 'chevronRight'
+      }
+    ]
   }
 ];
 

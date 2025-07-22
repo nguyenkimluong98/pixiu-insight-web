@@ -16,8 +16,7 @@ const META_THEME_COLORS = {
 };
 
 export const metadata: Metadata = {
-  title: 'Next Shadcn',
-  description: 'Basic dashboard with Next.js and Shadcn'
+  title: 'Pixiu Insight'
 };
 
 export const viewport: Viewport = {
@@ -66,7 +65,7 @@ export default async function RootLayout({
             enableColorScheme
           >
             <Providers activeThemeValue={activeThemeValue as string}>
-              <Toaster />
+              <Toaster richColors position='top-center' />
               {children}
             </Providers>
           </ThemeProvider>
