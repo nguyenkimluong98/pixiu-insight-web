@@ -58,7 +58,6 @@ export default function LevelFilterCard() {
   const [selectedRetentionDay, setSelectedRetentionDay] = useState<number[]>([
     0, 100
   ]);
-  const [selectedLevel, setSelectedLevel] = useState<number[]>([0, 100]);
 
   // TODO: add verionType, eventDayType
   // use store to apply filter to other component
@@ -178,7 +177,6 @@ export default function LevelFilterCard() {
       }
 
       if (data.level?.min !== undefined && data.level?.max !== undefined) {
-        setSelectedLevel([data.level.min, data.level.max]);
         setFilters({
           level: [data.level.min, data.level.max] // only set once time because it is master range data
         });

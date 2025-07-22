@@ -3,7 +3,7 @@ import { create } from 'zustand';
 
 export const Tabs = {
   FAIL_TO_PASS: 'fail-to-pass',
-  FAIL_TO_DROP: 'fail-to-drop',
+  FAIL_TO_STOP: 'fail-to-stop',
   PLAY_COUNTS: 'play-counts'
 } as const;
 
@@ -19,7 +19,7 @@ export interface LevelFilterState {
   retentionDay: number[];
   level: number[];
   isFilterReady: boolean;
-  activeTab: ActiveTab;
+  activeTab: string;
   filterVersion: number;
   setFilters: (filters: Partial<LevelFilterState>) => void;
   setFilterReady: (ready: boolean) => void;
@@ -36,7 +36,7 @@ export const useLevelFilterStore = create<LevelFilterState>((set, get) => ({
   retentionDay: [0, 0],
   level: [0, 0],
   isFilterReady: false,
-  activeTab: 'fail-to-pass',
+  activeTab: Tabs.FAIL_TO_PASS,
   filterVersion: 0,
   setFilters: (filters) => set(filters),
   setFilterReady: (ready) => set({ isFilterReady: ready }),

@@ -13,7 +13,7 @@ interface StatsErrorProps {
   error: Error;
   reset: () => void; // Add reset function from error boundary
 }
-export default function FailToPassError({ error, reset }: StatsErrorProps) {
+export default function FailToStopError({ error, reset }: StatsErrorProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 

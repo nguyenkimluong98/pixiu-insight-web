@@ -7,14 +7,19 @@ import PageContainer from '@/components/layout/page-container';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@radix-ui/react-dropdown-menu';
 import LevelFilterCard from '@/features/analystics/level/components/level-filter-card';
+import {
+  useLevelFilterStore,
+  Tabs as TabOptions
+} from '@/features/analystics/level/store/level-filter-store';
 
 export default function LevelAnalyticsLayout({
   fail_to_pass,
-  fail_to_drop
+  fail_to_stop
 }: {
   fail_to_pass: React.ReactNode;
-  fail_to_drop: React.ReactNode;
+  fail_to_stop: React.ReactNode;
 }) {
+  const { activeTab, setFilters } = useLevelFilterStore();
   return (
     <PageContainer scrollable={true}>
       <div className='flex flex-1 flex-col space-y-4'>
@@ -24,16 +29,29 @@ export default function LevelAnalyticsLayout({
         />
         <Separator />
         <LevelFilterCard key='LevelFilterCard' />
-        <Tabs defaultValue='fail-to-pass' className='w-full'>
+        <Tabs
+          defaultValue={TabOptions.FAIL_TO_PASS}
+          value={activeTab}
+          onValueChange={(value) => setFilters({ activeTab: value })}
+          className='w-full'
+        >
           <TabsList>
-            <TabsTrigger value='fail-to-pass'>Fail to Pass</TabsTrigger>
-            <TabsTrigger value='fail-to-drop'>Fail Users</TabsTrigger>
+            <TabsTrigger value={TabOptions.FAIL_TO_PASS}>
+              Fail to Pass
+            </TabsTrigger>
+            <TabsTrigger value={TabOptions.FAIL_TO_STOP}>
+              Fail to Stop
+            </TabsTrigger>
             <TabsTrigger value='play-counts'>Play Counts</TabsTrigger>
           </TabsList>
 
-          <TabsContent value='fail-to-pass'>{fail_to_pass}</TabsContent>
+          <TabsContent value={TabOptions.FAIL_TO_PASS}>
+            {fail_to_pass}
+          </TabsContent>
 
-          <TabsContent value='fail-to-drop'>{fail_to_drop}</TabsContent>
+          <TabsContent value={TabOptions.FAIL_TO_STOP}>
+            {fail_to_stop}
+          </TabsContent>
 
           <TabsContent value='play-counts'>
             <Card>

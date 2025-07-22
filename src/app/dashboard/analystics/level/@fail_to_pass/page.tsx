@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CardLoader from '@/components/ui/card-loader';
+import FullScreenLoader from '@/components/ui/fullscreen-loader';
 import { useFailToPassStats } from '@/features/analystics/level/api';
 import FailStatLineChart from '@/features/analystics/level/components/fail-stats-line-chart';
 import { FailStatsTable } from '@/features/analystics/level/components/fail-stats-tables';
@@ -40,9 +41,19 @@ export default function FailToPassChart() {
     execute(filters, filters.level);
   }, [filterVersion, isFilterReady, activeTab]);
 
+  // set level by loaded data
   useEffect(() => {
-    setSelectedLevel(filters.level);
-  }, [filters.level]);
+    if (loading || !data || !data.data) {
+      return;
+    }
+
+    const { data: levelData } = data;
+
+    setSelectedLevel([
+      levelData[0].level,
+      levelData[levelData.length - 1].level
+    ]);
+  }, [data]);
 
   const onLevelChange = (value: number[]) => {
     if (loading) return;
@@ -76,6 +87,7 @@ export default function FailToPassChart() {
 
   return (
     <Card>
+      {loading && <FullScreenLoader />}
       <CardHeader>
         <CardTitle className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5'>
           <div className='col-span-3'>AVG Fail to Pass current level</div>
@@ -94,15 +106,13 @@ export default function FailToPassChart() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {loading ? (
-          <CardLoader />
-        ) : (
+        {!loading && (
           <div>
             <FailStatLineChart data={data?.data} />
             <FailStatsTable
               data={filteredData || []}
               columns={columns}
-              totalItems={filteredData.length || 0}
+              totalItems={data?.data.length || 0}
             />
           </div>
         )}

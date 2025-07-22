@@ -20,12 +20,17 @@ export default function SliderInputRange({
   disabled,
   debounceMs
 }: Props) {
+  // value for only input element, use for logic onBlur
+  const [inputValue, setInputValue] = useState<number[]>(value);
   const [localValue, setLocalValue] = useState<number[]>(value);
   const hasUserInteracted = useRef(false);
 
   // Debounced effect to notify parent
   const debouncedOnChange = useDebouncedCallback((val: number[]) => {
     if (!hasUserInteracted.current) return; // don't execute if user hasn't interacted yet
+
+    // prevent auto run by effect after user interact previous finish
+    hasUserInteracted.current = false;
 
     const [from, to] = val;
 
@@ -54,6 +59,11 @@ export default function SliderInputRange({
     onValueChange(val);
   }, debounceMs ?? 300);
 
+  const handleBlur = () => {
+    // Set input when user unfocus
+    setLocalValue(inputValue);
+  };
+
   // Watch localValue changes
   useEffect(() => {
     debouncedOnChange(localValue);
@@ -61,6 +71,7 @@ export default function SliderInputRange({
 
   // Keep in sync with props
   useEffect(() => {
+    setInputValue(value);
     setLocalValue(value);
   }, [value]);
 
@@ -72,11 +83,12 @@ export default function SliderInputRange({
           disabled={disabled}
           className='inline-block w-24 text-center'
           type='number'
-          value={localValue[0]}
+          value={inputValue[0]}
           onChange={(e) => {
             hasUserInteracted.current = true;
-            setLocalValue([parseInt(e.target.value || '0', 10), localValue[1]]);
+            setInputValue([parseInt(e.target.value || '0', 10), inputValue[1]]);
           }}
+          onBlur={handleBlur}
         />
       </div>
       <Slider
@@ -84,6 +96,7 @@ export default function SliderInputRange({
         value={localValue}
         onValueChange={(value) => {
           hasUserInteracted.current = true;
+          setInputValue(value);
           setLocalValue(value);
         }} // ← debounce ở đây
         min={range[0]}
@@ -95,11 +108,12 @@ export default function SliderInputRange({
           disabled={disabled}
           className='inline-block w-24 text-center'
           type='number'
-          value={localValue[1]}
+          value={inputValue[1]}
           onChange={(e) => {
             hasUserInteracted.current = true;
-            setLocalValue([localValue[0], parseInt(e.target.value || '0', 10)]);
+            setInputValue([inputValue[0], parseInt(e.target.value || '0', 10)]);
           }}
+          onBlur={handleBlur}
         />
       </div>
     </div>
