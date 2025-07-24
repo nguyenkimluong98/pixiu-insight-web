@@ -1,14 +1,14 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import CardLoader from '@/components/ui/card-loader';
 import FullScreenLoader from '@/components/ui/fullscreen-loader';
 import { useFailToStopStats } from '@/features/analystics/level/api';
 import FailStatLineChart from '@/features/analystics/level/components/fail-stats-line-chart';
-import { FailStatsTable } from '@/features/analystics/level/components/fail-stats-tables';
-import { columns } from '@/features/analystics/level/components/fail-stats-tables/columns';
+import { StatsTable } from '@/features/analystics/level/components/stats-tables';
+import { failStatsColumns } from '@/features/analystics/level/components/stats-tables/columns';
 import SliderInputRange from '@/features/analystics/level/components/slider-input-range';
 import {
+  clampLevelRange,
   Params,
   SortParam,
   useFilteredStats
@@ -21,6 +21,7 @@ import axios from 'axios';
 import { parseAsInteger, parseAsJson, useQueryState } from 'nuqs';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
+import { LevelFailStat } from '@/types/level';
 
 const sortSchema = z.array(
   z.object({
@@ -38,7 +39,7 @@ export default function FailToStopChart() {
   useEffect(() => {
     if (!isFilterReady || activeTab !== Tabs.FAIL_TO_STOP) return;
 
-    execute(filters, filters.level);
+    execute(filters, clampLevelRange(filters.level));
   }, [filterVersion, isFilterReady, activeTab]);
 
   // set level by loaded data
@@ -77,7 +78,7 @@ export default function FailToStopChart() {
     sort: sortParam
   };
 
-  const filteredData = useFilteredStats(data?.data || [], query);
+  const filteredData = useFilteredStats<LevelFailStat>(data?.data || [], query);
 
   if (error && !axios.isCancel(error)) {
     throw error;
@@ -93,7 +94,23 @@ export default function FailToStopChart() {
           <div className='col-span-3'>AVG Fail to Stop current level</div>
           <div className='col-span-2 flex flex-col space-y-2'>
             <div className='flex items-center justify-center space-x-2'>
-              <label className='text-sm font-medium'>Level</label>
+              <div className='flex items-center justify-between space-x-2'>
+                <span className='flex-1' />
+                <label className='flex-1 text-center text-sm font-bold'>
+                  Level
+                </label>
+                <label className='flex-1 text-end text-sm font-medium'>
+                  (Min:{' '}
+                  <span className='text-primary font-bold'>
+                    {filters.level[0]}
+                  </span>{' '}
+                  - Max:{' '}
+                  <span className='text-primary font-bold'>
+                    {filters.level[1]}
+                  </span>
+                  )
+                </label>
+              </div>
             </div>
             <SliderInputRange
               disabled={loading}
@@ -109,9 +126,9 @@ export default function FailToStopChart() {
         {!loading && (
           <div>
             <FailStatLineChart data={data?.data} />
-            <FailStatsTable
+            <StatsTable
               data={filteredData || []}
-              columns={columns}
+              columns={failStatsColumns}
               totalItems={data?.data.length || 0}
             />
           </div>

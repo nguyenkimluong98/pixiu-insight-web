@@ -4,10 +4,11 @@ import { create } from 'zustand';
 export const Tabs = {
   FAIL_TO_PASS: 'fail-to-pass',
   FAIL_TO_STOP: 'fail-to-stop',
-  PLAY_COUNTS: 'play-counts'
+  DROP_RATE: 'drop-rate',
+  PLAYER_COUNT: 'player-count',
+  PLAYTIME_AVG: 'playtime-avg',
+  PLAY_TIMES_COUNT: 'play-times-count'
 } as const;
-
-type ActiveTab = (typeof Tabs)[keyof typeof Tabs];
 
 export interface LevelFilterState {
   game: Game | null;

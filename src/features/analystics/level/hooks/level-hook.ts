@@ -1,4 +1,3 @@
-import { LevelFailStat } from '@/types/level';
 import { useMemo } from 'react';
 
 export type SortParam = {
@@ -13,7 +12,10 @@ export type Params = {
   sort: SortParam[] | null;
 };
 
-export function useFilteredStats(data: LevelFailStat[], query: Params) {
+export function useFilteredStats<T extends { level: number }>(
+  data: T[],
+  query: Params
+) {
   const filteredData = useMemo(() => {
     if (!data || data.length === 0) return [];
 
@@ -46,4 +48,13 @@ export function useFilteredStats(data: LevelFailStat[], query: Params) {
   }, [data, query]);
 
   return filteredData;
+}
+
+export function clampLevelRange(
+  levelRange: number[],
+  minLevel = 1,
+  maxLevel = 200
+): [number, number] {
+  const [min, max] = levelRange;
+  return [Math.max(minLevel, min), Math.min(maxLevel, max)];
 }

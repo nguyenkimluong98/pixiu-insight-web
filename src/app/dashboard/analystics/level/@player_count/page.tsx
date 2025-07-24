@@ -2,10 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import FullScreenLoader from '@/components/ui/fullscreen-loader';
-import { useFailToPassStats } from '@/features/analystics/level/api';
-import FailStatLineChart from '@/features/analystics/level/components/fail-stats-line-chart';
 import { StatsTable } from '@/features/analystics/level/components/stats-tables';
-import { failStatsColumns } from '@/features/analystics/level/components/stats-tables/columns';
 import SliderInputRange from '@/features/analystics/level/components/slider-input-range';
 import {
   clampLevelRange,
@@ -21,7 +18,13 @@ import axios from 'axios';
 import { parseAsInteger, parseAsJson, useQueryState } from 'nuqs';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
-import { LevelFailStat } from '@/types/level';
+import { playerCountColumns } from '@/features/analystics/level/components/stats-tables/columns';
+import { PlayerCount } from '@/types/level';
+import { BarChart, LineChart } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import PlayerCountBarChart from '@/features/analystics/level/components/player-count-bar-chart';
+import PlayerCountLineChart from '@/features/analystics/level/components/player-count-line-chart';
+import { usePlayerCount } from '@/features/analystics/level/api';
 
 const sortSchema = z.array(
   z.object({
@@ -30,14 +33,15 @@ const sortSchema = z.array(
   })
 );
 
-export default function FailToPassChart() {
+export default function PlayerCountChart() {
   const { filterVersion, activeTab, isFilterReady, ...filters } =
     useLevelFilterStore();
   const [selectedLevel, setSelectedLevel] = useState<number[]>(filters.level);
-  const { data, loading, error, execute } = useFailToPassStats();
+  const [isBarChartSelect, setBarChartSelect] = useState<boolean>(false);
+  const { data, loading, error, execute } = usePlayerCount();
 
   useEffect(() => {
-    if (!isFilterReady || activeTab !== Tabs.FAIL_TO_PASS) return;
+    if (!isFilterReady || activeTab !== Tabs.PLAYER_COUNT) return;
 
     execute(filters, clampLevelRange(filters.level));
   }, [filterVersion, isFilterReady, activeTab]);
@@ -78,7 +82,7 @@ export default function FailToPassChart() {
     sort: sortParam
   };
 
-  const filteredData = useFilteredStats<LevelFailStat>(data?.data || [], query);
+  const filteredData = useFilteredStats<PlayerCount>(data?.data || [], query);
 
   if (error && !axios.isCancel(error)) {
     throw error;
@@ -91,26 +95,35 @@ export default function FailToPassChart() {
       {loading && <FullScreenLoader />}
       <CardHeader>
         <CardTitle className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5'>
-          <div className='col-span-3'>AVG Fail to Pass current level</div>
+          <div className='col-span-3'>
+            <span>Player Pass Count by Max Level</span>
+            <div className='mt-4 flex items-center gap-2'>
+              <LineChart className='h-4 w-4' />
+              <Switch
+                checked={isBarChartSelect}
+                onCheckedChange={setBarChartSelect}
+                className='!bg-primary'
+              />
+              <BarChart className='h-4 w-4' />
+            </div>
+          </div>
           <div className='col-span-2 flex flex-col space-y-2'>
-            <div className='flex items-center justify-center space-x-2'>
-              <div className='flex items-center justify-between space-x-2'>
-                <span className='flex-1' />
-                <label className='flex-1 text-center text-sm font-bold'>
-                  Level
-                </label>
-                <label className='flex-1 text-end text-sm font-medium'>
-                  (Min:{' '}
-                  <span className='text-primary font-bold'>
-                    {filters.level[0]}
-                  </span>{' '}
-                  - Max:{' '}
-                  <span className='text-primary font-bold'>
-                    {filters.level[1]}
-                  </span>
-                  )
-                </label>
-              </div>
+            <div className='flex items-center justify-between space-x-2'>
+              <span className='flex-1' />
+              <label className='flex-1 text-center text-sm font-bold'>
+                Level
+              </label>
+              <label className='flex-1 text-end text-sm font-medium'>
+                (Min:{' '}
+                <span className='text-primary font-bold'>
+                  {filters.level[0]}
+                </span>{' '}
+                - Max:{' '}
+                <span className='text-primary font-bold'>
+                  {filters.level[1]}
+                </span>
+                )
+              </label>
             </div>
             <SliderInputRange
               disabled={loading}
@@ -125,10 +138,14 @@ export default function FailToPassChart() {
       <CardContent>
         {!loading && (
           <div>
-            <FailStatLineChart data={data?.data} />
+            {isBarChartSelect ? (
+              <PlayerCountBarChart data={data?.data} />
+            ) : (
+              <PlayerCountLineChart data={data?.data} />
+            )}
             <StatsTable
               data={filteredData || []}
-              columns={failStatsColumns}
+              columns={playerCountColumns}
               totalItems={data?.data.length || 0}
             />
           </div>

@@ -2,10 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import FullScreenLoader from '@/components/ui/fullscreen-loader';
-import { useFailToPassStats } from '@/features/analystics/level/api';
-import FailStatLineChart from '@/features/analystics/level/components/fail-stats-line-chart';
 import { StatsTable } from '@/features/analystics/level/components/stats-tables';
-import { failStatsColumns } from '@/features/analystics/level/components/stats-tables/columns';
 import SliderInputRange from '@/features/analystics/level/components/slider-input-range';
 import {
   clampLevelRange,
@@ -21,7 +18,11 @@ import axios from 'axios';
 import { parseAsInteger, parseAsJson, useQueryState } from 'nuqs';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
-import { LevelFailStat } from '@/types/level';
+import { usePlayTimesCount } from '@/features/analystics/level/api';
+import PlayTimesCountLineChart from '@/features/analystics/level/components/play-times-count-line-char';
+import { playTimesCountColumns } from '@/features/analystics/level/components/stats-tables/columns';
+import { PlayTimesCount } from '@/types/level';
+import { Tooltip } from '@/components/ui/tooltip';
 
 const sortSchema = z.array(
   z.object({
@@ -30,14 +31,14 @@ const sortSchema = z.array(
   })
 );
 
-export default function FailToPassChart() {
+export default function PlayTimesCountChart() {
   const { filterVersion, activeTab, isFilterReady, ...filters } =
     useLevelFilterStore();
   const [selectedLevel, setSelectedLevel] = useState<number[]>(filters.level);
-  const { data, loading, error, execute } = useFailToPassStats();
+  const { data, loading, error, execute } = usePlayTimesCount();
 
   useEffect(() => {
-    if (!isFilterReady || activeTab !== Tabs.FAIL_TO_PASS) return;
+    if (!isFilterReady || activeTab !== Tabs.PLAY_TIMES_COUNT) return;
 
     execute(filters, clampLevelRange(filters.level));
   }, [filterVersion, isFilterReady, activeTab]);
@@ -78,7 +79,10 @@ export default function FailToPassChart() {
     sort: sortParam
   };
 
-  const filteredData = useFilteredStats<LevelFailStat>(data?.data || [], query);
+  const filteredData = useFilteredStats<PlayTimesCount>(
+    data?.data || [],
+    query
+  );
 
   if (error && !axios.isCancel(error)) {
     throw error;
@@ -91,26 +95,24 @@ export default function FailToPassChart() {
       {loading && <FullScreenLoader />}
       <CardHeader>
         <CardTitle className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5'>
-          <div className='col-span-3'>AVG Fail to Pass current level</div>
+          <div className='col-span-3'>Play Times Count by Current Level</div>
           <div className='col-span-2 flex flex-col space-y-2'>
-            <div className='flex items-center justify-center space-x-2'>
-              <div className='flex items-center justify-between space-x-2'>
-                <span className='flex-1' />
-                <label className='flex-1 text-center text-sm font-bold'>
-                  Level
-                </label>
-                <label className='flex-1 text-end text-sm font-medium'>
-                  (Min:{' '}
-                  <span className='text-primary font-bold'>
-                    {filters.level[0]}
-                  </span>{' '}
-                  - Max:{' '}
-                  <span className='text-primary font-bold'>
-                    {filters.level[1]}
-                  </span>
-                  )
-                </label>
-              </div>
+            <div className='flex items-center justify-between space-x-2'>
+              <span className='flex-1' />
+              <label className='flex-1 text-center text-sm font-bold'>
+                Level
+              </label>
+              <label className='flex-1 text-end text-sm font-medium'>
+                (Min:{' '}
+                <span className='text-primary font-bold'>
+                  {filters.level[0]}
+                </span>{' '}
+                - Max:{' '}
+                <span className='text-primary font-bold'>
+                  {filters.level[1]}
+                </span>
+                )
+              </label>
             </div>
             <SliderInputRange
               disabled={loading}
@@ -125,10 +127,10 @@ export default function FailToPassChart() {
       <CardContent>
         {!loading && (
           <div>
-            <FailStatLineChart data={data?.data} />
+            <PlayTimesCountLineChart data={data?.data} />
             <StatsTable
               data={filteredData || []}
-              columns={failStatsColumns}
+              columns={playTimesCountColumns}
               totalItems={data?.data.length || 0}
             />
           </div>

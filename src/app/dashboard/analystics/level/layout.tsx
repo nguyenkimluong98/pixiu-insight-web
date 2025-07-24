@@ -14,10 +14,16 @@ import {
 
 export default function LevelAnalyticsLayout({
   fail_to_pass,
-  fail_to_stop
+  fail_to_stop,
+  drop_rate,
+  player_count,
+  play_times_count
 }: {
   fail_to_pass: React.ReactNode;
   fail_to_stop: React.ReactNode;
+  drop_rate: React.ReactNode;
+  player_count: React.ReactNode;
+  play_times_count: React.ReactNode;
 }) {
   const { activeTab, setFilters } = useLevelFilterStore();
   return (
@@ -42,7 +48,16 @@ export default function LevelAnalyticsLayout({
             <TabsTrigger value={TabOptions.FAIL_TO_STOP}>
               Fail to Stop
             </TabsTrigger>
-            <TabsTrigger value='play-counts'>Play Counts</TabsTrigger>
+            <TabsTrigger value={TabOptions.DROP_RATE}>Drop Rate</TabsTrigger>
+            <TabsTrigger value={TabOptions.PLAYER_COUNT}>
+              Player Count
+            </TabsTrigger>
+            <TabsTrigger value={TabOptions.PLAYTIME_AVG}>
+              Playtime Average
+            </TabsTrigger>
+            <TabsTrigger value={TabOptions.PLAY_TIMES_COUNT}>
+              Play Times Count
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value={TabOptions.FAIL_TO_PASS}>
@@ -53,7 +68,13 @@ export default function LevelAnalyticsLayout({
             {fail_to_stop}
           </TabsContent>
 
-          <TabsContent value='play-counts'>
+          <TabsContent value={TabOptions.DROP_RATE}>{drop_rate}</TabsContent>
+
+          <TabsContent value={TabOptions.PLAYER_COUNT}>
+            {player_count}
+          </TabsContent>
+
+          <TabsContent value={TabOptions.PLAYTIME_AVG}>
             <Card>
               <CardHeader>
                 <CardTitle>Play Counts by State</CardTitle>
@@ -62,6 +83,10 @@ export default function LevelAnalyticsLayout({
                 <p>Chart for play counts by state here</p>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value={TabOptions.PLAY_TIMES_COUNT}>
+            {play_times_count}
           </TabsContent>
         </Tabs>
       </div>

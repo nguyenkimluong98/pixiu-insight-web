@@ -2,32 +2,29 @@
 
 import { LevelFailStat } from '@/types/level';
 import {
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer
+  ResponsiveContainer,
+  BarChart,
+  Bar
 } from 'recharts';
 
 type Props = {
   data: LevelFailStat[];
 };
 
-export default function FailToPassChart({ data }: Props) {
+export default function DropRateBarChart({ data }: Props) {
   return (
     <div className='w-full'>
       <div className='mb-4 flex flex-wrap items-center justify-center gap-4 text-sm'>
-        <LegendItem color='var(--primary)' label='Average' />
-        <LegendItem color='#8884d8' label='First Quartile (Q1)' />
-        <LegendItem color='#82ca9d' label='Median (Q2)' />
-        <LegendItem color='#FF3300' label='Third Quartile (Q3)' />
+        <LegendItem color='var(--primary)' label='Ratio (%)' />
       </div>
 
       <div className=''>
         <ResponsiveContainer width='100%' height='100%' aspect={3.5}>
-          <LineChart
+          <BarChart
             data={data}
             margin={{ top: 8, bottom: 24, left: 12, right: 12 }}
           >
@@ -45,7 +42,7 @@ export default function FailToPassChart({ data }: Props) {
             />
             <YAxis
               label={{
-                value: 'Play turns',
+                value: 'Ratio',
                 angle: -90,
                 position: 'insideLeft',
                 offset: -5
@@ -73,15 +70,21 @@ export default function FailToPassChart({ data }: Props) {
                     </div>
                     <div className='text-muted-foreground mb-1 space-y-1 text-xs'>
                       <div>
-                        Total Fail:{' '}
-                        <span className='font-bold text-[var(--primary)]'>
-                          {item.totalFail}
+                        Total Drop:{' '}
+                        <span className='ffont-bold text-[#FF3300]'>
+                          {item.totalDrop}
                         </span>
                       </div>
                       <div>
-                        Total Player:{' '}
-                        <span className='font-bold text-[var(--primary)]'>
-                          {item.totalPlayer}
+                        Total Pass:{' '}
+                        <span className='font-bold text-[#82ca9d]'>
+                          {item.totalPass}
+                        </span>
+                      </div>
+                      <div>
+                        Total Pass Previous:{' '}
+                        <span className='font-bold text-[#8884d8]'>
+                          {item.totalPassPrevious}
                         </span>
                       </div>
                     </div>
@@ -89,37 +92,11 @@ export default function FailToPassChart({ data }: Props) {
                       <div className='flex items-center gap-2'>
                         {dot('var(--primary)')}{' '}
                         <span>
-                          Average:{' '}
+                          Ratio:{' '}
                           <span className='font-bold text-[var(--primary)]'>
-                            {item.average}
-                          </span>
-                        </span>
-                      </div>
-                      <div className='flex items-center gap-2'>
-                        {dot('#8884d8')}{' '}
-                        <span>
-                          First Quartile:{' '}
-                          <span className='font-bold text-[#8884d8]'>
-                            {item.q1}
-                          </span>
-                        </span>
-                      </div>
-                      <div className='flex items-center gap-2'>
-                        {dot('#82ca9d')}{' '}
-                        <span>
-                          Median:{' '}
-                          <span className='font-bold text-[#82ca9d]'>
-                            {item.q2}
-                          </span>
-                        </span>
-                      </div>
-                      <div className='flex items-center gap-2'>
-                        {dot('#FF3300')}{' '}
-                        <span>
-                          Third Quartile:{' '}
-                          <span className='font-bold text-[#FF3300]'>
-                            {item.q3}
-                          </span>
+                            {item.ratio}
+                          </span>{' '}
+                          (%)
                         </span>
                       </div>
                     </div>
@@ -132,39 +109,13 @@ export default function FailToPassChart({ data }: Props) {
                 strokeWidth: 2
               }}
             />
-            <Line
+            <Bar
               type='monotone'
-              dataKey='average'
-              stroke='var(--primary)'
-              strokeWidth={2}
-              dot
-              name='Average'
+              dataKey='ratio'
+              name='Ratio (%}'
+              fill='var(--primary)'
             />
-            <Line
-              type='monotone'
-              dataKey='q1'
-              stroke='#8884d8'
-              strokeWidth={2}
-              dot
-              name='Q1'
-            />
-            <Line
-              type='monotone'
-              dataKey='q2'
-              stroke='#82ca9d'
-              strokeWidth={2}
-              dot
-              name='Median'
-            />
-            <Line
-              type='monotone'
-              dataKey='q3'
-              stroke='#FF3300'
-              strokeWidth={2}
-              dot
-              name='Q3'
-            />
-          </LineChart>
+          </BarChart>
         </ResponsiveContainer>
       </div>
     </div>
