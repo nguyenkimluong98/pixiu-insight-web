@@ -18,19 +18,11 @@ import axios from 'axios';
 import { parseAsInteger, parseAsJson, useQueryState } from 'nuqs';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
-import {
-  playerCountColumns,
-  playtimeAvgColumns
-} from '@/features/analystics/level/components/stats-tables/columns';
-import { PlayerCount, PlaytimeAvg } from '@/types/level';
+import { playtimeAvgColumns } from '@/features/analystics/level/components/stats-tables/columns';
+import { PlaytimeAvg } from '@/types/level';
 import { BarChart, LineChart } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
-import PlayerCountBarChart from '@/features/analystics/level/components/player-count-bar-chart';
-import PlayerCountLineChart from '@/features/analystics/level/components/player-count-line-chart';
-import {
-  usePlayerCount,
-  usePlayetimeAvg
-} from '@/features/analystics/level/api';
+import { usePlayetimeAvg } from '@/features/analystics/level/api';
 import PlaytimeAvgBarChart from '@/features/analystics/level/components/playtime-avg-bar-chart';
 import PlaytimeAvgLineChart from '@/features/analystics/level/components/playtime-avg-line-chart';
 

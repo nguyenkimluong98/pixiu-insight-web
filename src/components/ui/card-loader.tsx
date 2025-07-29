@@ -1,4 +1,3 @@
-import { Card, CardContent } from '@/components/ui/card';
 import Lottie from 'lottie-react';
 import loadingAnimation from '@/../public/animations/loading.json'; // Đường dẫn đúng với project của bạn
 

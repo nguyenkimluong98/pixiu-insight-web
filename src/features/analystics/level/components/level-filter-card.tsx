@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useMetadata } from '../api';
 import { Option } from '@/types/data-table';
-import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
 import { toast } from 'sonner';
 import { parse } from 'date-fns';
 import {
@@ -23,8 +22,6 @@ import {
 import { MultiSelect } from '@/components/ui/multi-select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Switch } from '@/components/ui/switch';
-import { Input } from '@/components/ui/input';
-import { Slider } from '@/components/ui/slider';
 import { SelectDate } from '@/components/ui/select-date';
 import Image from 'next/image';
 import FullScreenLoader from '@/components/ui/fullscreen-loader';

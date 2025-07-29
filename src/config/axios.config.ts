@@ -40,7 +40,6 @@ axios.interceptors.response.use(
   async (error) => {
     // Implement logic here
     if (Axios.isCancel(error)) {
-      console.info('Request canceled:', error.message);
       return new Promise(() => {}); // Ngăn truyền tiếp lỗi xuống axios-hooks
     }
 

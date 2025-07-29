@@ -22,7 +22,6 @@ import { usePlayTimesCount } from '@/features/analystics/level/api';
 import PlayTimesCountLineChart from '@/features/analystics/level/components/play-times-count-line-char';
 import { playTimesCountColumns } from '@/features/analystics/level/components/stats-tables/columns';
 import { PlayTimesCount } from '@/types/level';
-import { Tooltip } from '@/components/ui/tooltip';
 
 const sortSchema = z.array(
   z.object({
