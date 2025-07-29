@@ -26,3 +26,9 @@ export type PlayTimesCount = {
   totalPass: number;
   totalFail: number;
 };
+
+export type PlaytimeAvg = {
+  level: number;
+  avgPassTime: number;
+  avgFailTime: number;
+};

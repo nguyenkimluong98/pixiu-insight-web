@@ -6,6 +6,7 @@ import {
   DropRate,
   LevelFailStat,
   PlayerCount,
+  PlaytimeAvg,
   PlayTimesCount
 } from '@/types/level';
 
@@ -136,6 +137,38 @@ export const playerCountColumns: ColumnDef<PlayerCount>[] = [
     header: 'Total Player',
     meta: {
       label: 'Total Player'
+    }
+  }
+];
+
+export const playtimeAvgColumns: ColumnDef<PlaytimeAvg>[] = [
+  {
+    id: 'level',
+    accessorKey: 'level',
+    header: ({ column }: { column: Column<PlaytimeAvg, unknown> }) => (
+      <DataTableColumnHeader column={column} title='Level' />
+    ),
+    cell: ({ cell }) => <div>{cell.getValue<PlaytimeAvg['level']>()}</div>,
+    meta: {
+      label: 'Level',
+      placeholder: 'Search level...',
+      variant: 'text',
+      icon: Text
+    },
+    enableColumnFilter: true
+  },
+  {
+    accessorKey: 'avgPassTime',
+    header: 'AVG Pass Time(s)',
+    meta: {
+      label: 'AVG Pass Time(s)'
+    }
+  },
+  {
+    accessorKey: 'avgFailTime',
+    header: 'AVG Fail Time(s)',
+    meta: {
+      label: 'AVG Fail Time(s)'
     }
   }
 ];

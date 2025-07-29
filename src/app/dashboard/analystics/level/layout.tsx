@@ -17,13 +17,15 @@ export default function LevelAnalyticsLayout({
   fail_to_stop,
   drop_rate,
   player_count,
-  play_times_count
+  play_times_count,
+  avg_playtime
 }: {
   fail_to_pass: React.ReactNode;
   fail_to_stop: React.ReactNode;
   drop_rate: React.ReactNode;
   player_count: React.ReactNode;
   play_times_count: React.ReactNode;
+  avg_playtime: React.ReactNode;
 }) {
   const { activeTab, setFilters } = useLevelFilterStore();
   return (
@@ -75,14 +77,7 @@ export default function LevelAnalyticsLayout({
           </TabsContent>
 
           <TabsContent value={TabOptions.PLAYTIME_AVG}>
-            <Card>
-              <CardHeader>
-                <CardTitle>Play Counts by State</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>Chart for play counts by state here</p>
-              </CardContent>
-            </Card>
+            {avg_playtime}
           </TabsContent>
 
           <TabsContent value={TabOptions.PLAY_TIMES_COUNT}>
